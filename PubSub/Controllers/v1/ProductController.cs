@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PubSub.Contracts.v1;
-using _Utils.Models.v1;
+using PubSubApi.Models.v1;
 
 namespace PubSub.Controllers.v1
 {
@@ -15,26 +15,26 @@ namespace PubSub.Controllers.v1
         }
 
         [HttpPost]
-        public IActionResult Post(Product product)
+        public ActionResult<Product> Post(Product product)
         {
             var result = _productService.Post(product);
-            if (result.IsFaulted) return BadRequest();
+            if (result == null) return BadRequest();
             return Ok(product);
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
-        public IActionResult Get(int id)
+        public ActionResult<Product> Get(int id)
         {
             var result = _productService.GetOne(id);
-            if (result.IsFaulted) return BadRequest("Not Found");
+            if (result == null) return BadRequest("Not Found");
             else return Ok(result);
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<List<Product>> Get()
         {
             var result = _productService.GetAll();
-            if (result.IsFaulted) return BadRequest(result);
+            if (result == null) return BadRequest(result);
             else return Ok(result);
         }
     }

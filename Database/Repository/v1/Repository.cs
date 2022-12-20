@@ -10,19 +10,19 @@ namespace DatabaseAPI.Repository.v1
             _db = db;
         }
 
-        public async Task<List<T>> GetAll()
+        public List<T> GetAll()
         {
-            return await _db.GetAllAsync();
+            return _db.GetAllAsync();
         }
 
-        public async Task<T> GetOne(int id)
+        public T GetOne(int id)
         {
-            return await _db.GetOneAsync(id);
+            return _db.GetOneAsync(id);
         }
 
-        public async Task<T> PostAsync(T entity)
+        public T PostAsync(T entity)
         {
-            return await _db.PostAsync(entity);
+            return _db.PostAsync(entity);
         }
     }
 }

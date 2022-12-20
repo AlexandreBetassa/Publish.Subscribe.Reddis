@@ -2,8 +2,8 @@
 {
     public interface IRepository<T> where T : class
     {
-        Task<T> PostAsync(T entity);
-        Task<T> GetOne(int id);
-        Task<List<T>> GetAll();
+        T PostAsync(T entity);
+        T GetOne(int id);
+        List<T> GetAll();
     }
 }

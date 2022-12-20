@@ -2,8 +2,8 @@
 {
     public interface IService<T> where T : class
     {
-        Task<T> Post(T entity);
-        Task<List<T>> GetAll();
-        Task<T> GetOne(int id);
+        T Post(T entity);
+        List<T> GetAll();
+        T GetOne(int id);
     }
 }

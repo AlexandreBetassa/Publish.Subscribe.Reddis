@@ -1,6 +1,7 @@
 ﻿using DatabaseAPI.Context.v1;
 using DatabaseAPI.Contracts.v1;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseAPI.Data.v1
 {
@@ -12,33 +13,23 @@ namespace DatabaseAPI.Data.v1
             _db = db;
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public List<T> GetAllAsync()
         {
             return _db.Set<T>().ToList();
         }
 
-        public async Task<T> GetOneAsync(int id)
+        public T GetOneAsync(int id)
         {
-            return await _db.Set<T>().FindAsync(id);
+            return _db.Set<T>().Find(id);
         }
 
-        public async Task<T> PostAsync(T entity)
+        public T PostAsync(T entity)
         {
-            try
-            {
-                _db.Set<T>().AddAsync(entity);
-                _db.SaveChanges();
-            }
 
-            catch (SqlException ex)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            _db.Set<T>().AddAsync(entity);
+            _db.SaveChangesAsync();
             return entity;
+
         }
     }
 }

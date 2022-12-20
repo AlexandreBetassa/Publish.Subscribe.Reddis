@@ -10,19 +10,19 @@ namespace PubSub.Services.v1
             _repository = repository;
         }
 
-        public async Task<List<T>> GetAll()
+        public List<T> GetAll()
         {
-            return await _repository.GetAll();
+            return _repository.GetAll().Result;
         }
 
-        public async Task<T> GetOne(int id)
+        public T GetOne(int id)
         {
-            return await _repository.GetOne(id);
+            return _repository.GetOne(id).Result;
         }
 
-        public async Task<T> Post(T entity)
+        public T Post(T entity)
         {
-            return await _repository.Post(entity);
+            return _repository.Post(entity).Result;
         }
     }
 }

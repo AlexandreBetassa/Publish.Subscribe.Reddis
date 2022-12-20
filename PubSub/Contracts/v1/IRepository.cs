@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace PubSub.Contracts.v1
+﻿namespace PubSub.Contracts.v1
 {
     public interface IRepository<T> where T : class
     {

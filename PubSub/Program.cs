@@ -13,7 +13,9 @@ builder.Services.AddTransient(typeof(IService<>), typeof(Services<>));
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<HttpClient>();
 
+
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {

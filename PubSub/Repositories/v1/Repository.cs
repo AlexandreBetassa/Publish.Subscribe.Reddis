@@ -1,4 +1,5 @@
 ﻿using PubSub.Contracts.v1;
+using StackExchange.Redis;
 using System.Text;
 using System.Text.Json;
 
@@ -11,13 +12,15 @@ namespace PubSub.Repositories.v1
         {
             _client = client;
         }
+
         public async Task<List<T>?> GetAll()
         {
             try
             {
-                using HttpResponseMessage response = await _client.GetAsync("");
+                HttpResponseMessage response = await _client.GetAsync("https://localhost:44313/api/Product/GetAll");
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return await Task.FromResult(JsonSerializer.Deserialize<List<T>?>(responseContent));
+                var result = JsonSerializer.Deserialize<List<T>>(responseContent);
+                return result;
             }
             catch (Exception e)
             {
@@ -27,11 +30,11 @@ namespace PubSub.Repositories.v1
 
         public async Task<T> GetOne(int id)
         {
-            using HttpResponseMessage response = await _client.GetAsync($" /{id}");
+            using HttpResponseMessage response = await _client.GetAsync($"https://localhost:44313/api/Product/GetOne?id={id}");
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
+                return JsonSerializer.Deserialize<T>(responseContent);
             }
             else throw new Exception();
         }
@@ -42,8 +45,8 @@ namespace PubSub.Repositories.v1
             {
                 var entityJson = JsonSerializer.Serialize(entity);
                 var content = new StringContent(entityJson, Encoding.UTF8, "application/json");
-                await _client.PostAsync("", content);
-                return await Task.FromResult(entity);
+                await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
+                return entity;
             }
             catch (Exception e)
             {

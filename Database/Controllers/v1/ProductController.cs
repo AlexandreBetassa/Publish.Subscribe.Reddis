@@ -15,26 +15,27 @@ namespace DatabaseAPI.Controllers.v1
         }
 
         [HttpGet("GetAll", Name = "GetAll")]
-        public async Task<ActionResult<List<Product>>> GetDb()
+        public ActionResult<List<Product>> GetDb()
         {
-            var result = await _serviceProduct.GetAll();
-            return await Task.FromResult(result);
+            var result = _serviceProduct.GetAll();
+            return result;
 
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
-        public async Task<ActionResult<Product>> GetOneDb(int id)
+        public ActionResult<Product> GetOneDb(int id)
         {
-            var result = await _serviceProduct.GetOne(id);
-            return await Task.FromResult(result);
+            var result = _serviceProduct.GetOne(id);
+            return result;
         }
 
         [HttpPost("Post", Name = "Post")]
-        public async Task<ActionResult<Product>> PostDb(Product product)
+        public ActionResult<Product> PostDb([FromBody] Product product)
         {
+            _serviceProduct.OrderReceived();
             _serviceProduct.PostAsync(product);
             var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
-            return await Task.FromResult(result);
+            return result;
         }
     }
 }
