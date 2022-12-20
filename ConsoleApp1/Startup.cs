@@ -1,12 +1,9 @@
-﻿using Microsoft.Owin;
-using Owin;
+﻿using Owin;
 using System.Web.Http;
-
-[assembly: OwinStartup(typeof(ConsoleApp1.Startup1))]
 
 namespace ConsoleApp1
 {
-    public class Startup1
+    public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
@@ -16,6 +13,7 @@ namespace ConsoleApp1
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
+            app.UseWebApi(config);
         }
     }
 }

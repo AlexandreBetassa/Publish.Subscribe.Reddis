@@ -5,7 +5,7 @@
 namespace DatabaseAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AlteradoConString : Migration
+    public partial class UpdateData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

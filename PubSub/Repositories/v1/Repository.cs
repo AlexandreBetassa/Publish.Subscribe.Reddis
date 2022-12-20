@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using PubSub.Contracts.v1;
+﻿using PubSub.Contracts.v1;
 using System.Text;
 using System.Text.Json;
 

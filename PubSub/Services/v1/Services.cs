@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PubSub.Contracts.v1;
-using PubSub.Models.v1;
+﻿using PubSub.Contracts.v1;
 
 namespace PubSub.Services.v1
 {

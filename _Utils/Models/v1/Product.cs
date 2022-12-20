@@ -1,9 +1,10 @@
-﻿using DatabaseAPI.Enum.v1;
+﻿using _Utils.Contracts.v1;
+using _Utils.Enum.v1;
 using System.ComponentModel.DataAnnotations;
 
-namespace DatabaseAPI.Models.v1
+namespace _Utils.Models.v1
 {
-    public class Product
+    public class Product : IEntity
     {
         [Key]
         public int Id { get; set; }
