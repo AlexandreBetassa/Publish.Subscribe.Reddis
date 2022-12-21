@@ -54,7 +54,7 @@ namespace Client2.Services.v1
         public static bool ValidateCreditCard(string number)
         {
             var cc = new CreditCardAttribute();
-            if(cc.IsValid(number)) return true;
+            if (cc.IsValid(number)) return true;
             else return false;
         }
 
@@ -68,26 +68,38 @@ namespace Client2.Services.v1
         public static async Task InvalidCpf(Product product)
         {
             product.Status = StatusEnum.Refused_Invalid_Cpf;
-            await pubsub.PublishAsync(Channel, "Refused: Invalid CPF", CommandFlags.FireAndForget);
-            var repository = new ProductRepository(new HttpClient());
-            var result = await repository.Update(product);
-            await PublishChannel(result);
+
+            await pubsub.PublishAsync(Channel,
+                                      $"Refused: Invalid CPF. " +
+                                      GetString(product),
+                                      CommandFlags.FireAndForget);
+            await Update(product);
         }
 
         public static async Task InvalidCc(Product product)
         {
             product.Status = StatusEnum.Refused_Invalid_CreditCard;
-            await pubsub.PublishAsync(Channel, "Refused: Invalid Credit Card", CommandFlags.FireAndForget);
-            var repository = new ProductRepository(new HttpClient());
-            var result = await repository.Update(product);
-            await PublishChannel(result);
 
+            await pubsub.PublishAsync(Channel,
+                                      $"Refused: Invalid Credit Card. " +
+                                      GetString(product),
+                                      CommandFlags.FireAndForget);
+            await Update(product);
         }
 
         public static async Task Approved(Product product)
         {
             product.Status = StatusEnum.Approved;
-            await pubsub.PublishAsync(Channel, "Approved", CommandFlags.FireAndForget);
+
+            await pubsub.PublishAsync(Channel,
+                                      $"Approved. " +
+                                      GetString(product),
+                                      CommandFlags.FireAndForget);
+            await Update(product);
+        }
+
+        static async Task Update(Product product)
+        {
             var repository = new ProductRepository(new HttpClient());
             var result = await repository.Update(product);
             await PublishChannel(result);
@@ -95,8 +107,15 @@ namespace Client2.Services.v1
 
         static async Task PublishChannel(bool result)
         {
-            if (result) await pubsub.PublishAsync(Channel, "Database refresh success", CommandFlags.FireAndForget);
-            else await pubsub.PublishAsync(Channel, "Database refresh fail", CommandFlags.FireAndForget);
+            if (result) await pubsub.PublishAsync(Channel, "Database refresh success\n", CommandFlags.FireAndForget);
+            else await pubsub.PublishAsync(Channel, "Database refresh fail\n", CommandFlags.FireAndForget);
+        }
+
+        static string GetString(Product product)
+        {
+            return $"Order number : {product.Id}. " +
+                   $"Order CPF: {product.Cpf}. " +
+                   $"Order Credit Card: {product.CreditCard}";
         }
     }
 }
