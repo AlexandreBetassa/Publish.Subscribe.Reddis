@@ -15,27 +15,27 @@ namespace PubSub.Controllers.v1
         }
 
         [HttpPost]
-        public ActionResult<Product> Post(Product product)
+        public async Task<ActionResult<Product>> Post(Product product)
         {
-            product = _productService.Post(product);
+            product = await _productService.Post(product);
             if (product == null) return BadRequest();
-            _productService.PublishRedis("Request received successfully. In process of data validation.\n" +
+            await _productService.PublishRedis("Request received successfully. In process of data validation.\n" +
                 "Number order: " + product.Id + "\n");
             return Ok(product);
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
-        public ActionResult<Product> Get(int id)
+        public async  Task<ActionResult<Product>> Get(int id)
         {
-            var result = _productService.GetOne(id);
+            var result = await _productService.GetOne(id);
             if (result == null) return BadRequest("Not Found");
             else return Ok(result);
         }
 
         [HttpGet]
-        public ActionResult<List<Product>> Get()
+        public async Task<ActionResult<List<Product>>> Get()
         {
-            var result = _productService.GetAll();
+            var result = await _productService.GetAll();
             if (result == null) return BadRequest(result);
             else return Ok(result);
         }

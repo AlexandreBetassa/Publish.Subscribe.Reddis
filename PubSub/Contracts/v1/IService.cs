@@ -2,9 +2,9 @@
 {
     public interface IService<T> where T : class
     {
-        T Post(T entity);
-        List<T> GetAll();
-        T GetOne(int id);
-        void PublishRedis(string message);
+        Task<T> Post(T entity);
+        Task<List<T>> GetAll();
+        Task<T> GetOne(int id);
+        Task PublishRedis(string message);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using PubSub.Contracts.v1;
-using PubSubApi.Contracts.v1;
 using StackExchange.Redis;
 
 namespace PubSub.Services.v1
@@ -14,26 +13,25 @@ namespace PubSub.Services.v1
             _sub = connection.GetSubscriber();
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return _repository.GetAll().Result;
+            return await _repository.GetAll();
         }
 
-        public T GetOne(int id)
+        public async Task<T> GetOne(int id)
         {
-            return _repository.GetOne(id).Result;
+            return await _repository.GetOne(id);
         }
 
-        public void PublishRedis(string message)
+        public async Task PublishRedis(string message)
         {
-            _sub.PublishAsync("Channel1", message, CommandFlags.FireAndForget);
-
+            await _sub.PublishAsync("Channel1", message, CommandFlags.FireAndForget);
         }
 
-        public T Post(T entity)
+        public async Task<T> Post(T entity)
         {
-            PublishRedis("Request sent to the central");
-            var result = _repository.Post(entity).Result;
+            await PublishRedis("Request sent to the central");
+            var result = await _repository.Post(entity);
             return result;
         }
     }

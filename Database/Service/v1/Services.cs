@@ -13,27 +13,27 @@ namespace DatabaseAPI.IService.v1
             _sub = conn.GetSubscriber();
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return _repository.GetAll();
+            return  await _repository.GetAll();
         }
 
-        public T GetOne(int id)
+        public async Task<T> GetOne(int id)
         {
-            return _repository.GetOne(id);
+            return await _repository.GetOne(id);
         }
 
-        public T PostAsync(T entity)
+        public async Task<T> PostAsync(T entity)
         {
-            _sub.PublishAsync("Channel1", "Order in Process", CommandFlags.FireAndForget);
+            await _sub.PublishAsync("Channel1", "Order in Process", CommandFlags.FireAndForget);
             try
             {
-                return _repository.PostAsync(entity);
+                return await _repository.PostAsync(entity);
                 
             }
             catch (Exception)
             {
-                _sub.PublishAsync("Channel1", "Failed to process the request. Try again.", CommandFlags.FireAndForget);
+                await _sub.PublishAsync("Channel1", "Failed to process the request. Try again.", CommandFlags.FireAndForget);
                 throw;
             }
         }

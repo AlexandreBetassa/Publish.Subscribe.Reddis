@@ -1,5 +1,6 @@
 ﻿using DatabaseAPI.Context.v1;
 using DatabaseAPI.Contracts.v1;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseAPI.Data.v1
 {
@@ -11,20 +12,20 @@ namespace DatabaseAPI.Data.v1
             _db = db;
         }
 
-        public List<T> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
-            return _db.Set<T>().ToList();
+            return  await _db.Set<T>().ToListAsync();
         }
 
-        public T GetOneAsync(int id)
+        public async Task<T> GetOneAsync(int id)
         {
-            return _db.Set<T>().Find(id);
+            return await _db.Set<T>().FindAsync(id);
         }
 
         public async Task<T> PostAsync(T entity)
         {
 
-            var result = _db.Set<T>().AddAsync(entity);
+            var result = await _db.Set<T>().AddAsync(entity);
             await _db.SaveChangesAsync();
             return await Task.FromResult(result as T);
         }

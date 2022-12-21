@@ -1,5 +1,4 @@
 ﻿using PubSub.Contracts.v1;
-using StackExchange.Redis;
 using System.Text;
 using System.Text.Json;
 
@@ -22,7 +21,7 @@ namespace PubSub.Repositories.v1
                 var result = JsonSerializer.Deserialize<List<T>>(responseContent);
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

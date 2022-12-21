@@ -1,7 +1,6 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Models.v1;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
 
 namespace DatabaseAPI.Controllers.v1
 {
@@ -11,7 +10,7 @@ namespace DatabaseAPI.Controllers.v1
     {
         private readonly IService<Product> _serviceProduct;
 
-        public ProductController(IService<Product> serviceProduct, IConnectionMultiplexer sub)
+        public ProductController(IService<Product> serviceProduct)
         {
             _serviceProduct = serviceProduct;
         }
@@ -19,26 +18,26 @@ namespace DatabaseAPI.Controllers.v1
 
 
         [HttpGet("GetAll", Name = "GetAll")]
-        public ActionResult<List<Product>> GetDb()
+        public async Task<ActionResult<List<Product>>> GetDb()
         {
             var result = _serviceProduct.GetAll();
-            return result;
+            return await result;
 
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
-        public ActionResult<Product> GetOneDb(int id)
+        public async Task<ActionResult<Product>> GetOneDb(int id)
         {
             var result = _serviceProduct.GetOne(id);
-            return result;
+            return await result;
         }
 
         [HttpPost("Post", Name = "Post")]
-        public ActionResult<Product> PostDb([FromBody] Product product)
+        public async Task<ActionResult<Product>> PostDb([FromBody] Product product)
         {
-            _serviceProduct.PostAsync(product);
+            await _serviceProduct.PostAsync(product);
             var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
-            return Ok(result.Value);
+            return result;
         }
     }
 }
