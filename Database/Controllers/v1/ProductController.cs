@@ -1,6 +1,7 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Models.v1;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace DatabaseAPI.Controllers.v1
 {
@@ -9,10 +10,13 @@ namespace DatabaseAPI.Controllers.v1
     public class ProductController : ControllerBase
     {
         private readonly IService<Product> _serviceProduct;
-        public ProductController(IService<Product> serviceProduct)
+
+        public ProductController(IService<Product> serviceProduct, IConnectionMultiplexer sub)
         {
             _serviceProduct = serviceProduct;
         }
+
+
 
         [HttpGet("GetAll", Name = "GetAll")]
         public ActionResult<List<Product>> GetDb()
@@ -32,10 +36,9 @@ namespace DatabaseAPI.Controllers.v1
         [HttpPost("Post", Name = "Post")]
         public ActionResult<Product> PostDb([FromBody] Product product)
         {
-            _serviceProduct.OrderReceived();
             _serviceProduct.PostAsync(product);
             var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
-            return result;
+            return Ok(result.Value);
         }
     }
 }

@@ -5,6 +5,5 @@
         T PostAsync(T entity);
         T GetOne(int id);
         List<T> GetAll();
-        void OrderReceived();
     }
 }

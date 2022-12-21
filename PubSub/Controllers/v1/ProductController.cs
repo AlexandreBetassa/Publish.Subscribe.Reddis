@@ -17,8 +17,10 @@ namespace PubSub.Controllers.v1
         [HttpPost]
         public ActionResult<Product> Post(Product product)
         {
-            var result = _productService.Post(product);
-            if (result == null) return BadRequest();
+            product = _productService.Post(product);
+            if (product == null) return BadRequest();
+            _productService.PublishRedis("Request received successfully. In process of data validation.\n" +
+                "Number order: " + product.Id + "\n");
             return Ok(product);
         }
 

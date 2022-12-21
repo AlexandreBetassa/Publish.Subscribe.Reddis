@@ -22,7 +22,7 @@ namespace DatabaseAPI.Repository.v1
 
         public T PostAsync(T entity)
         {
-            return _db.PostAsync(entity);
+            return _db.PostAsync(entity).Result;
         }
     }
 }

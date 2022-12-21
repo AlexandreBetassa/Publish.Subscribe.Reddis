@@ -6,9 +6,11 @@ namespace DatabaseAPI.IService.v1
     public class Services<T> : IService<T> where T : class
     {
         private readonly IRepository<T> _repository;
-        public Services(IRepository<T> repository)
+        private readonly ISubscriber _sub;
+        public Services(IRepository<T> repository, IConnectionMultiplexer conn)
         {
             _repository = repository;
+            _sub = conn.GetSubscriber();
         }
 
         public List<T> GetAll()
@@ -21,16 +23,19 @@ namespace DatabaseAPI.IService.v1
             return _repository.GetOne(id);
         }
 
-        public void OrderReceived()
-        {
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:6379");
-            ISubscriber sub = redis.GetSubscriber();
-            sub.Publish("Channel1", "Order received, status: Pending", CommandFlags.FireAndForget);
-        }
-
         public T PostAsync(T entity)
         {
-            return _repository.PostAsync(entity);
+            _sub.PublishAsync("Channel1", "Order in Process", CommandFlags.FireAndForget);
+            try
+            {
+                return _repository.PostAsync(entity);
+                
+            }
+            catch (Exception)
+            {
+                _sub.PublishAsync("Channel1", "Failed to process the request. Try again.", CommandFlags.FireAndForget);
+                throw;
+            }
         }
     }
 }

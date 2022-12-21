@@ -1,11 +1,10 @@
-﻿using PubSubApi.Contracts.v1;
-using PubSubApi.Enum.v1;
+﻿using PubSubApi.Enum.v1;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace PubSubApi.Models.v1
 {
-    public class Product : IEntity
+    public class Product 
     {
         [Key]
         [JsonPropertyName("Id")]

@@ -1,7 +1,5 @@
 ﻿using DatabaseAPI.Context.v1;
 using DatabaseAPI.Contracts.v1;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseAPI.Data.v1
 {
@@ -23,13 +21,12 @@ namespace DatabaseAPI.Data.v1
             return _db.Set<T>().Find(id);
         }
 
-        public T PostAsync(T entity)
+        public async Task<T> PostAsync(T entity)
         {
 
-            _db.Set<T>().AddAsync(entity);
-            _db.SaveChangesAsync();
-            return entity;
-
+            var result = _db.Set<T>().AddAsync(entity);
+            await _db.SaveChangesAsync();
+            return await Task.FromResult(result as T);
         }
     }
 }

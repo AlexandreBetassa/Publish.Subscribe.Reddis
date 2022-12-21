@@ -45,10 +45,15 @@ namespace PubSub.Repositories.v1
             {
                 var entityJson = JsonSerializer.Serialize(entity);
                 var content = new StringContent(entityJson, Encoding.UTF8, "application/json");
-                await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
-                return entity;
+                var result = await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
+                if (result.IsSuccessStatusCode)
+                {
+                    var T = JsonSerializer.Deserialize<T>(await result.Content.ReadAsStringAsync());
+                    return await Task.FromResult(T);
+                }
+                else throw new Exception();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
