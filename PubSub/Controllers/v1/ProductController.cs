@@ -19,8 +19,7 @@ namespace PubSub.Controllers.v1
         {
             product = await _productService.Post(product);
             if (product == null) return BadRequest();
-            await _productService.PublishRedis("Request received successfully. In process of data validation.\n" +
-                "Number order: " + product.Id + "\n");
+            await _productService.PublishRedis(product.Id);
             return Ok(product);
         }
 

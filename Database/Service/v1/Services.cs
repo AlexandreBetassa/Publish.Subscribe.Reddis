@@ -1,21 +1,21 @@
 ﻿using DatabaseAPI.Contracts.v1;
-using StackExchange.Redis;
+using DatabaseAPI.Service.v1;
 
 namespace DatabaseAPI.IService.v1
 {
     public class Services<T> : IService<T> where T : class
     {
         private readonly IRepository<T> _repository;
-        private readonly ISubscriber _sub;
-        public Services(IRepository<T> repository, IConnectionMultiplexer conn)
+        private readonly RedisService _redis;
+        public Services(IRepository<T> repository, RedisService redis)
         {
             _repository = repository;
-            _sub = conn.GetSubscriber();
+            _redis = redis;
         }
 
         public async Task<List<T>> GetAll()
         {
-            return  await _repository.GetAll();
+            return await _repository.GetAll();
         }
 
         public async Task<T> GetOne(int id)
@@ -25,15 +25,14 @@ namespace DatabaseAPI.IService.v1
 
         public async Task<T> PostAsync(T entity)
         {
-            await _sub.PublishAsync("Channel1", "Order in Process", CommandFlags.FireAndForget);
+            await _redis.Publish("Order in Process");
             try
             {
                 return await _repository.PostAsync(entity);
-                
             }
             catch (Exception)
             {
-                await _sub.PublishAsync("Channel1", "Failed to process the request. Try again.", CommandFlags.FireAndForget);
+                await _redis.Publish("Failed to process the request. Try again.");
                 throw;
             }
         }

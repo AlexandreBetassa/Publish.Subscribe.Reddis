@@ -3,6 +3,7 @@ using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Data.v1;
 using DatabaseAPI.IService.v1;
 using DatabaseAPI.Repository.v1;
+using DatabaseAPI.Service.v1;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -18,6 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient(typeof(IService<>), typeof(Services<>));
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient(typeof(IDatabase<>), typeof(Database<>));
+
+builder.Services.AddTransient<RedisService>();
 
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration["ConnectionString:DefaultConnection"]));
 

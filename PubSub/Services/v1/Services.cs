@@ -1,16 +1,17 @@
 ﻿using PubSub.Contracts.v1;
-using StackExchange.Redis;
+using PubSubApi.Services.v1;
+using System.Text.Json;
 
 namespace PubSub.Services.v1
 {
     public class Services<T> : IService<T> where T : class
     {
         private readonly IRepository<T> _repository;
-        private readonly ISubscriber _sub;
-        public Services(IRepository<T> repository, IConnectionMultiplexer connection)
+        private readonly RedisService _redis;
+        public Services(IRepository<T> repository, RedisService redis)
         {
             _repository = repository;
-            _sub = connection.GetSubscriber();
+            _redis = redis;
         }
 
         public async Task<List<T>> GetAll()
@@ -23,16 +24,17 @@ namespace PubSub.Services.v1
             return await _repository.GetOne(id);
         }
 
-        public async Task PublishRedis(string message)
-        {
-            await _sub.PublishAsync("Channel1", message, CommandFlags.FireAndForget);
-        }
-
         public async Task<T> Post(T entity)
         {
-            await PublishRedis("Request sent to the central");
+            await _redis.PublishRedis("Request sent to the central");
             var result = await _repository.Post(entity);
+            await _redis.PublishRedisObject(JsonSerializer.Serialize(result));
             return result;
+        }
+
+        public async Task PublishRedis(int id)
+        {
+            await _redis.PublishRedis($"Request received successfully. In process of data validation. Number order: {id}");
         }
     }
 }

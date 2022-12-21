@@ -1,6 +1,6 @@
-﻿namespace PubSubApi.Enum.v1
+﻿namespace Client2.Enum.v1
 {
-    public enum StatusEnum
+    internal enum StatusEnum
     {
         Pending,
         Approved,

@@ -15,8 +15,6 @@ namespace DatabaseAPI.Controllers.v1
             _serviceProduct = serviceProduct;
         }
 
-
-
         [HttpGet("GetAll", Name = "GetAll")]
         public async Task<ActionResult<List<Product>>> GetDb()
         {
