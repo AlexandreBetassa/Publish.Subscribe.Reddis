@@ -37,5 +37,13 @@ namespace DatabaseAPI.Controllers.v1
             var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
             return result;
         }
+
+        [HttpPut]
+        public async Task<ActionResult<Product>> Put([FromBody]Product product)
+        {
+            await _serviceProduct.PutAsync(product);
+            var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
+            return Ok(result);
+        }
     }
 }

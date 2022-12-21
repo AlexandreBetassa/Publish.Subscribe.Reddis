@@ -29,5 +29,13 @@ namespace DatabaseAPI.Data.v1
             await _db.SaveChangesAsync();
             return await Task.FromResult(result as T);
         }
+
+        public async Task<T> PutAsync(T entity)
+        {
+            _db.Set<T>().Update(entity);
+            var result = await _db.SaveChangesAsync();
+            return await Task.FromResult(result as T);
+
+        }
     }
 }

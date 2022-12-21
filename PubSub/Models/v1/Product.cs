@@ -17,5 +17,6 @@ namespace PubSubApi.Models.v1
         public string CreditCard { get; set; }
         [JsonPropertyName("Status")]
         public StatusEnum Status { get; set; }
+
     }
 }

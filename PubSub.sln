@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseAPI", "Database\Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client1", "Logs\Client1.csproj", "{DA9EE864-290F-4D80-A3DB-B0418FFDC4B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client2", "Client2\Client2.csproj", "{6AB318A2-62FF-438B-A6D5-482930C66382}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client2-AntiFraud", "Client2\Client2-AntiFraud.csproj", "{6AB318A2-62FF-438B-A6D5-482930C66382}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

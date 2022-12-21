@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Client2.Models.v1
 {
-    internal class Product
+    public class Product
     {
         [JsonPropertyName("Id")]
         public int Id { get; set; }

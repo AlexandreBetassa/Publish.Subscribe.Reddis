@@ -36,5 +36,10 @@ namespace DatabaseAPI.IService.v1
                 throw;
             }
         }
+
+        public async Task<T> PutAsync(T entity)
+        {
+            return await _repository.PutAsync(entity);
+        }
     }
 }

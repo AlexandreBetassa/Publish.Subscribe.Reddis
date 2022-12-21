@@ -1,6 +1,6 @@
 ﻿namespace Client2.Enum.v1
 {
-    internal enum StatusEnum
+    public enum StatusEnum
     {
         Pending,
         Approved,
