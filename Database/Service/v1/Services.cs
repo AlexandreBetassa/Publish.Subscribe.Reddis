@@ -28,6 +28,7 @@ namespace DatabaseAPI.IService.v1
         {
             try
             {
+                await Task.Run(async () => await _redis.Publish("Order received at the central, in processing."));
                 var result = await _repository.PostAsync(entity);
                 return result;
             }

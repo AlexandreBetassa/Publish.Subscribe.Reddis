@@ -19,12 +19,12 @@ namespace Client2
         {
             Console.WriteLine("Status Order");
             Product product;
-            await Task.Run(async () => await pubsub.SubscribeAsync(Channel2, (channel, message) =>
+            await Task.Run(async () => await pubsub.SubscribeAsync(Channel2, async (channel, message) => 
             {
                 product = JsonSerializer.Deserialize<Product>(message);
-                product = Services.v1.Services.Post(product).Result;
-                pubsub.PublishAsync(Channel, $"Data received for validation. Number order: {product.Id}", CommandFlags.FireAndForget);
-                Task.Run(() => Services.v1.Services.CheckData(product));
+                await Task.Run(async () => product = await Services.v1.Services.Post(product));
+                await Task.Run(async () => await pubsub.PublishAsync(Channel, $"Data received for validation. Number order: {product.Id}", CommandFlags.FireAndForget));
+                await Task.Run(async () => await Services.v1.Services.CheckData(product));
             }));
 
             await Task.Run(async () => await pubsub.SubscribeAsync(Channel, (channel, message) =>
