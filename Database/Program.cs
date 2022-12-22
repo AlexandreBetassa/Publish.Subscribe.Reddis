@@ -2,10 +2,14 @@ using DatabaseAPI.Context.v1;
 using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Data.v1;
 using DatabaseAPI.IService.v1;
+using DatabaseAPI.Models.v1;
 using DatabaseAPI.Repository.v1;
 using DatabaseAPI.Service.v1;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +26,9 @@ builder.Services.AddTransient(typeof(IDatabase<>), typeof(Database<>));
 
 builder.Services.AddTransient<RedisService>();
 
+ConnectionMultiplexer conn = ConnectionMultiplexer.Connect(builder.Configuration.GetSection("Redis").Value);
+builder.Services.AddSingleton<IConnectionMultiplexer>(conn);
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration["ConnectionString:DefaultConnection"]));
-
-ConnectionMultiplexer cm = ConnectionMultiplexer.Connect(builder.Configuration.GetRequiredSection("Redis").Value);
-builder.Services.AddSingleton<IConnectionMultiplexer>(cm);
 
 var app = builder.Build();
 

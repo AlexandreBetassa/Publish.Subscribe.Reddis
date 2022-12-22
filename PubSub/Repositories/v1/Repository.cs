@@ -1,5 +1,5 @@
 ﻿using PubSub.Contracts.v1;
-using System.Text;
+using PubSubApi.Services.v1;
 using System.Text.Json;
 
 namespace PubSub.Repositories.v1
@@ -7,9 +7,12 @@ namespace PubSub.Repositories.v1
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly HttpClient _client;
-        public Repository(HttpClient client)
+        private readonly RedisService _redis;
+
+        public Repository(HttpClient client, RedisService redis)
         {
             _client = client;
+            _redis = redis;
         }
 
         public async Task<List<T>?> GetAll()
@@ -38,24 +41,10 @@ namespace PubSub.Repositories.v1
             else throw new Exception();
         }
 
-        public async Task<T> Post(T entity)
+        public async Task Post(T entity)
         {
-            try
-            {
-                var entityJson = JsonSerializer.Serialize(entity);
-                var content = new StringContent(entityJson, Encoding.UTF8, "application/json");
-                var result = await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
-                if (result.IsSuccessStatusCode)
-                {
-                    var T = JsonSerializer.Deserialize<T>(await result.Content.ReadAsStringAsync());
-                    return await Task.FromResult(T);
-                }
-                else throw new Exception();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            await Task.Run(async () => await _redis.PublishRedis("Request sent to the central"));
+            await Task.Run(async () => await _redis.PublishRedisObject(JsonSerializer.Serialize(entity)));
         }
     }
 }

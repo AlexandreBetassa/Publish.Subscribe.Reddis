@@ -1,5 +1,6 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Service.v1;
+using System.Text.Json;
 
 namespace DatabaseAPI.IService.v1
 {
@@ -25,14 +26,14 @@ namespace DatabaseAPI.IService.v1
 
         public async Task<T> PostAsync(T entity)
         {
-            await _redis.Publish("Order in Process");
             try
             {
-                return await _repository.PostAsync(entity);
+                var result = await _repository.PostAsync(entity);
+                return result;
             }
             catch (Exception)
             {
-                await _redis.Publish("Failed to process the request. Try again.");
+                await Task.Run(async () => await _redis.Publish("Failed to process the request. Try again."));
                 throw;
             }
         }

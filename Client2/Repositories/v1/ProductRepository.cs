@@ -14,7 +14,16 @@ namespace Client2.Repositories.v1
             _client = client;
         }
 
-        public async Task<bool>Update(Product product)
+        public async Task<Product> Post(Product product)
+        {
+            var jsonText = JsonSerializer.Serialize(product);
+            var content = new StringContent(jsonText, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
+            if (response.IsSuccessStatusCode) return JsonSerializer.Deserialize<Product>(await response.Content.ReadAsStringAsync());
+            else return null;
+        }
+
+        public async Task<bool> Update(Product product)
         {
             var jsonText = JsonSerializer.Serialize(product);
             var content = new StringContent(jsonText, Encoding.UTF8, "application/json");

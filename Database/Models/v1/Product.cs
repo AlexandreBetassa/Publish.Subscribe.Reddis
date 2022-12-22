@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace DatabaseAPI.Models.v1
 {
-    public class Product 
+    public class Product
     {
         [Key]
         [JsonPropertyName("Id")]

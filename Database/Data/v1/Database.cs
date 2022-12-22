@@ -14,7 +14,7 @@ namespace DatabaseAPI.Data.v1
 
         public async Task<List<T>> GetAllAsync()
         {
-            return  await _db.Set<T>().ToListAsync();
+            return await _db.Set<T>().ToListAsync();
         }
 
         public async Task<T> GetOneAsync(int id)
@@ -24,17 +24,16 @@ namespace DatabaseAPI.Data.v1
 
         public async Task<T> PostAsync(T entity)
         {
-
-            var result = await _db.Set<T>().AddAsync(entity);
+            var result = _db.Set<T>().Add(entity);
             await _db.SaveChangesAsync();
-            return await Task.FromResult(result as T);
+            return result.Entity;
         }
 
         public async Task<T> PutAsync(T entity)
         {
-            _db.Set<T>().Update(entity);
-            var result = await _db.SaveChangesAsync();
-            return await Task.FromResult(result as T);
+            var result = _db.Set<T>().Update(entity);
+            Task.Run(() => _db.SaveChangesAsync());
+            return result.Entity;
 
         }
     }

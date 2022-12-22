@@ -14,10 +14,10 @@ namespace PubSubApi.Services.v1
         {
             await _sub.PublishAsync("Channel1", message, CommandFlags.FireAndForget);
         }
+
         public async Task PublishRedisObject(string message)
         {
             await _sub.PublishAsync("Channel2", message, CommandFlags.FireAndForget);
         }
-
     }
 }

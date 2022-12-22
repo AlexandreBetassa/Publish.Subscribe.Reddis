@@ -23,6 +23,7 @@ namespace DatabaseAPI.Repository.v1
         public async Task<T> PostAsync(T entity)
         {
             return await _db.PostAsync(entity);
+
         }
 
         public async Task<T> PutAsync(T entity)

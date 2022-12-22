@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Client2.Services.v1
 {
-    public static class ValidatorServices
+    public static class Services
     {
         private const string RedisConnectionString = "localhost:6379";
         private static ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(RedisConnectionString);
@@ -60,9 +60,9 @@ namespace Client2.Services.v1
 
         public static async Task CheckData(Product product)
         {
-            if (!ValidatorServices.ValidateCpf(product.Cpf)) await InvalidCpf(product);
-            else if (!ValidatorServices.ValidateCreditCard(product.CreditCard)) await InvalidCc(product);
-            else await Approved(product);
+            if (!ValidateCpf(product.Cpf)) await Task.Run(async () => await InvalidCpf(product));
+            else if (!ValidateCreditCard(product.CreditCard)) await Task.Run(async () => await InvalidCc(product));
+            else await Task.Run(async () => await Approved(product));
         }
 
         public static async Task InvalidCpf(Product product)
@@ -103,6 +103,12 @@ namespace Client2.Services.v1
             var repository = new ProductRepository(new HttpClient());
             var result = await repository.Update(product);
             await PublishChannel(result);
+        }
+
+        public static async Task<Product> Post(Product product)
+        {
+            var repository = new ProductRepository(new HttpClient());
+            return await repository.Post(product);
         }
 
         static async Task PublishChannel(bool result)

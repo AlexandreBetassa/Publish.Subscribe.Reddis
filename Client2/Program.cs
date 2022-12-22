@@ -1,10 +1,6 @@
-﻿using Client2.Enum.v1;
-using Client2.Models.v1;
-using Client2.Repositories.v1;
-using Client2.Services.v1;
+﻿using Client2.Models.v1;
 using StackExchange.Redis;
 using System;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,21 +15,22 @@ namespace Client2
         static ISubscriber pubsub = connection.GetSubscriber();
 
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Status Order");
             Product product;
-            pubsub.SubscribeAsync(Channel2, (channel, message) =>
+            await Task.Run(async () => await pubsub.SubscribeAsync(Channel2, (channel, message) =>
             {
                 product = JsonSerializer.Deserialize<Product>(message);
-                pubsub.PublishAsync(Channel, "Data received for validation.", CommandFlags.FireAndForget);
-                ValidatorServices.CheckData(product);
-            });
+                product = Services.v1.Services.Post(product).Result;
+                pubsub.PublishAsync(Channel, $"Data received for validation. Number order: {product.Id}", CommandFlags.FireAndForget);
+                Task.Run(() => Services.v1.Services.CheckData(product));
+            }));
 
-            pubsub.Subscribe(Channel, (channel, message) =>
+            await Task.Run(async () => await pubsub.SubscribeAsync(Channel, (channel, message) =>
             {
                 Console.Write($"\n{message}");
-            });
+            }));
             Console.ReadLine();
         }
     }

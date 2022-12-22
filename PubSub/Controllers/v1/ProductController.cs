@@ -15,16 +15,14 @@ namespace PubSub.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> Post(Product product)
+        public async Task<IActionResult> Post(Product product)
         {
-            product = await _productService.Post(product);
-            if (product == null) return BadRequest();
-            await _productService.PublishRedis(product.Id);
-            return Ok(product);
+            await _productService.Post(product);
+            return Ok("Order sent success");
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
-        public async  Task<ActionResult<Product>> Get(int id)
+        public async Task<ActionResult<Product>> Get(int id)
         {
             var result = await _productService.GetOne(id);
             if (result == null) return BadRequest("Not Found");
@@ -34,6 +32,7 @@ namespace PubSub.Controllers.v1
         [HttpGet]
         public async Task<ActionResult<List<Product>>> Get()
         {
+
             var result = await _productService.GetAll();
             if (result == null) return BadRequest(result);
             else return Ok(result);

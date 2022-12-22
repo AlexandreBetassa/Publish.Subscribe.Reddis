@@ -9,7 +9,6 @@ namespace DatabaseAPI.Controllers.v1
     public class ProductController : ControllerBase
     {
         private readonly IService<Product> _serviceProduct;
-
         public ProductController(IService<Product> serviceProduct)
         {
             _serviceProduct = serviceProduct;
@@ -18,9 +17,7 @@ namespace DatabaseAPI.Controllers.v1
         [HttpGet("GetAll", Name = "GetAll")]
         public async Task<ActionResult<List<Product>>> GetDb()
         {
-            var result = _serviceProduct.GetAll();
-            return await result;
-
+            return await _serviceProduct.GetAll();
         }
 
         [HttpGet("GetOne", Name = "GetOne")]
@@ -33,17 +30,16 @@ namespace DatabaseAPI.Controllers.v1
         [HttpPost("Post", Name = "Post")]
         public async Task<ActionResult<Product>> PostDb([FromBody] Product product)
         {
-            await _serviceProduct.PostAsync(product);
-            var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
-            return result;
+            product = await _serviceProduct.PostAsync(product);
+            return CreatedAtRoute("GetOne", new { id = product.Id }, product);
         }
 
         [HttpPut]
-        public async Task<ActionResult<Product>> Put([FromBody]Product product)
+        public async Task<ActionResult<Product>> Put([FromBody] Product product)
         {
-            await _serviceProduct.PutAsync(product);
-            var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
-            return Ok(result);
+            await Task.Run(() => _serviceProduct.PutAsync(product));
+            return CreatedAtRoute("GetOne", new { id = product.Id }, product);
         }
+
     }
 }
