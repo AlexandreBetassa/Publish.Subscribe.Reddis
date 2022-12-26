@@ -18,7 +18,7 @@ namespace Client2.Repositories.v1
         {
             var jsonText = JsonSerializer.Serialize(product);
             var content = new StringContent(jsonText, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("https://localhost:44313/api/Product/Post/", content);
+            var response = await _client.PostAsync("http://localhost:44313/api/Product/Post/", content);
             if (response.IsSuccessStatusCode) return JsonSerializer.Deserialize<Product>(await response.Content.ReadAsStringAsync());
             else return null;
         }
@@ -27,7 +27,7 @@ namespace Client2.Repositories.v1
         {
             var jsonText = JsonSerializer.Serialize(product);
             var content = new StringContent(jsonText, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync("https://localhost:44313/api/Product", content);
+            var response = await _client.PutAsync("http://localhost:44313/api/Product", content);
             if (response.IsSuccessStatusCode) return true;
             else return false;
         }
