@@ -32,7 +32,7 @@ namespace DatabaseAPI.Data.v1
         public async Task<T> PutAsync(T entity)
         {
             var result = _db.Set<T>().Update(entity);
-            Task.Run(() => _db.SaveChangesAsync());
+            await Task.Run(async () => await _db.SaveChangesAsync());
             return result.Entity;
 
         }

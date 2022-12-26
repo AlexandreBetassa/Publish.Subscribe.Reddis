@@ -11,11 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton(typeof(IService<>), typeof(Services<>));
-builder.Services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddSingleton<RedisService>();
+builder.Services.AddTransient(typeof(IService<>), typeof(Services<>));
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient<RedisService>();
 
-builder.Services.AddSingleton<HttpClient>();
+builder.Services.AddScoped<HttpClient>();
 
 ConnectionMultiplexer conn = ConnectionMultiplexer.Connect(builder.Configuration.GetRequiredSection("Redis").Value);
 builder.Services.AddSingleton<IConnectionMultiplexer>(conn);

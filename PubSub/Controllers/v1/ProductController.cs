@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PubSub.Contracts.v1;
 using PubSubApi.Models.v1;
 
@@ -30,18 +29,9 @@ namespace PubSub.Controllers.v1
             else return Ok(result);
         }
 
-        [HttpGet("GetTest", Name = "GetTest")]
-        public async Task<ActionResult<string>> GetTest()
-        {
-            var result = await _productService.GetTest();
-            if (result == null) return BadRequest("Not Found");
-            else return Ok(result);
-        }
-
         [HttpGet]
         public async Task<ActionResult<List<Product>>> Get()
         {
-
             var result = await _productService.GetAll();
             if (result == null) return BadRequest(result);
             else return Ok(result);

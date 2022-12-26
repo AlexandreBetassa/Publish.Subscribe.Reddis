@@ -19,7 +19,7 @@ builder.Services.AddTransient(typeof(IService<>), typeof(Services<>));
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient(typeof(IDatabase<>), typeof(Database<>));
 
-builder.Services.AddSingleton<RedisService>();
+builder.Services.AddTransient<RedisService>();
 
 ConnectionMultiplexer conn = ConnectionMultiplexer.Connect(builder.Configuration.GetRequiredSection("Redis").Value);
 builder.Services.AddSingleton<IConnectionMultiplexer>(conn);

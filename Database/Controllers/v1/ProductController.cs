@@ -1,6 +1,5 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Models.v1;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseAPI.Controllers.v1
@@ -19,12 +18,6 @@ namespace DatabaseAPI.Controllers.v1
         public async Task<ActionResult<List<Product>>> GetDb()
         {
             return await _serviceProduct.GetAll();
-        }
-
-        [HttpGet("GetTest", Name = "GetTest")]
-        public async Task<ActionResult<List<Product>>> Get()
-        {
-            return Ok("Teste");
         }
 
         [HttpGet("GetOne", Name = "GetOne")]

@@ -1,8 +1,5 @@
 ﻿using PubSub.Contracts.v1;
 using PubSubApi.Services.v1;
-using System.Net.Security;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 namespace PubSub.Repositories.v1
@@ -40,17 +37,6 @@ namespace PubSub.Repositories.v1
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<T>(responseContent);
-            }
-            else throw new Exception();
-        }
-
-        public async Task<string> GetTest()
-        {
-            using HttpResponseMessage response = await _client.GetAsync($"http://DESKTOP-49RHHLK:44313/api/Product/GetTest");
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<string>(responseContent);
             }
             else throw new Exception();
         }
