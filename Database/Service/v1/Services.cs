@@ -1,6 +1,5 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Service.v1;
-using System.Text.Json;
 
 namespace DatabaseAPI.IService.v1
 {

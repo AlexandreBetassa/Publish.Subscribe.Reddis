@@ -1,5 +1,6 @@
 ﻿using DatabaseAPI.Contracts.v1;
 using DatabaseAPI.Models.v1;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseAPI.Controllers.v1
@@ -20,6 +21,12 @@ namespace DatabaseAPI.Controllers.v1
             return await _serviceProduct.GetAll();
         }
 
+        [HttpGet("GetTest", Name = "GetTest")]
+        public async Task<ActionResult<List<Product>>> Get()
+        {
+            return Ok("Teste");
+        }
+
         [HttpGet("GetOne", Name = "GetOne")]
         public async Task<ActionResult<Product>> GetOneDb(int id)
         {
@@ -31,8 +38,10 @@ namespace DatabaseAPI.Controllers.v1
         public async Task<ActionResult<Product>> PostDb([FromBody] Product product)
         {
             product = await _serviceProduct.PostAsync(product);
-            return CreatedAtRoute("GetOne", new { id = product.Id }, product);
+            var result = CreatedAtRoute("GetOne", new { id = product.Id }, product);
+            return result;
         }
+
 
         [HttpPut]
         public async Task<ActionResult<Product>> Put([FromBody] Product product)

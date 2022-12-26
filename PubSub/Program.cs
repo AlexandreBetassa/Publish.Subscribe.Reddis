@@ -11,27 +11,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient(typeof(IService<>), typeof(Services<>));
-builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddTransient<RedisService>();
+builder.Services.AddSingleton(typeof(IService<>), typeof(Services<>));
+builder.Services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddSingleton<RedisService>();
 
-builder.Services.AddTransient<HttpClient>();
+builder.Services.AddSingleton<HttpClient>();
 
-ConnectionMultiplexer conn = ConnectionMultiplexer.Connect(builder.Configuration.GetSection("Redis").Value);
+ConnectionMultiplexer conn = ConnectionMultiplexer.Connect(builder.Configuration.GetRequiredSection("Redis").Value);
 builder.Services.AddSingleton<IConnectionMultiplexer>(conn);
 
 var app = builder.Build();
 
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

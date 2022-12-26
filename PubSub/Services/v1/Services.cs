@@ -20,6 +20,11 @@ namespace PubSub.Services.v1
             return await _repository.GetOne(id);
         }
 
+        public async Task<string> GetTest()
+        {
+            return await _repository.GetTest();
+        }
+
         public async Task Post(T entity)
         {
             await Task.Run(() => _repository.Post(entity));

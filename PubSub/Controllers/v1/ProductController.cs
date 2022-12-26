@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using PubSub.Contracts.v1;
 using PubSubApi.Models.v1;
 
@@ -25,6 +26,14 @@ namespace PubSub.Controllers.v1
         public async Task<ActionResult<Product>> Get(int id)
         {
             var result = await _productService.GetOne(id);
+            if (result == null) return BadRequest("Not Found");
+            else return Ok(result);
+        }
+
+        [HttpGet("GetTest", Name = "GetTest")]
+        public async Task<ActionResult<string>> GetTest()
+        {
+            var result = await _productService.GetTest();
             if (result == null) return BadRequest("Not Found");
             else return Ok(result);
         }
